@@ -1,0 +1,15 @@
+# Secrets: API keys, client secrets, database settings. Never commit.
+.env
+.env.*
+
+# The virtual environment: rebuilt with `pip install -r requirements.txt`
+.venv/
+
+# Python's compiled bytecode caches
+__pycache__/
+*.pyc
+
+# macOS and editor clutter
+.DS_Store
+.vscode/
+.idea/
