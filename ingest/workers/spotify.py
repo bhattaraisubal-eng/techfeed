@@ -72,6 +72,8 @@ class SpotifyWorker(Worker):
         # The show object includes its first page of episodes; `next` links to the rest.
         show = self.http.get_json(f"{API_URL}/shows/{show_id}", params={"market": self.market}, headers=self._auth_headers())
         show_info = {"id": show.get("id"), "name": show.get("name"), "publisher": show.get("publisher")}
+        if artwork := largest_image(show.get("images")):
+            self.source_logos[show_id] = artwork
         page = show.get("episodes") or {}
         episodes: list[dict] = []
         while True:

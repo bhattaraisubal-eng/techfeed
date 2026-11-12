@@ -142,5 +142,29 @@ class ThumbnailTests(unittest.TestCase):
         self.assertIsNone(self.thumbnail({}))
 
 
+
+class ChannelLogoTests(unittest.TestCase):
+    def test_channel_call_also_asks_for_the_snippet(self):
+        # The avatar comes from the call we already make: part=snippet costs no extra quota.
+        http = FakeHttp(ROUTES)
+        YouTubeWorker(http, "KEY", ["UCabc"]).run(limit=1)
+        self.assertIn("snippet", http.calls[0].params["part"].split(","))
+
+    def test_avatar_is_the_largest_size(self):
+        def with_avatar(url, params):
+            data = channels(url, params)
+            data["items"][0]["snippet"] = {"thumbnails": {
+                "default": {"url": "https://yt3.example/88"}, "medium": {"url": "https://yt3.example/240"},
+                "high": {"url": "https://yt3.example/800"}}}
+            return data
+        worker = YouTubeWorker(FakeHttp([("/channels", with_avatar), *ROUTES[1:]]), "KEY", ["UCabc"])
+        worker.run(limit=1)
+        self.assertEqual(worker.source_logos, {"UCabc": "https://yt3.example/800"})
+
+    def test_no_avatar(self):
+        worker = YouTubeWorker(FakeHttp(ROUTES), "KEY", ["UCabc"])
+        worker.run(limit=1)
+        self.assertEqual(worker.source_logos, {})
+
 if __name__ == "__main__":
     unittest.main()

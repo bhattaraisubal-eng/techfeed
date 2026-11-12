@@ -28,6 +28,9 @@ CREATE TABLE sources (
     status                text NOT NULL DEFAULT 'active'
                           CHECK (status IN ('active', 'dormant', 'disabled')),
     notes                 text,
+    -- A hand-picked logo, from the CSV. Only for sources whose own logo is
+    -- missing or ugly; when set, it wins over logo_url (see below).
+    logo_override         text,
     created_at            timestamptz NOT NULL DEFAULT now(),
 
     -- Health, updated after every run.
@@ -43,6 +46,13 @@ CREATE TABLE sources (
     -- pipeline only after the items were stored (see ingest/pipeline.py).
     http_etag             text,
     http_last_modified    text,
+
+    -- The logo the source itself provides (a channel avatar, show artwork, a
+    -- feed's <image>/<logo>), saved by the pipeline. Shown on cards for items
+    -- without a thumbnail. The app shows COALESCE(logo_override, logo_url).
+    -- Two columns, not one, so the seed script and the pipeline never
+    -- overwrite each other: each column has one owner.
+    logo_url              text,
 
     -- The same feed (or channel, or query) can't be added twice.
     UNIQUE (worker, locator)

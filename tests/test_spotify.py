@@ -102,5 +102,13 @@ class SpotifyWorkerTests(unittest.TestCase):
         self.assertEqual(parse_release_date("2024"), datetime(2024, 1, 1, tzinfo=UTC))
 
 
+    def test_show_artwork_becomes_the_source_logo(self):
+        show = {**SHOW, "images": [{"url": "https://i.scdn.co/show64", "width": 64},
+                                   {"url": "https://i.scdn.co/show640", "width": 640}]}
+        http = FakeHttp([("accounts.spotify.com", TOKEN), ("/shows/S1/episodes", PAGE2), ("/shows/S1", show)])
+        worker = self.make(http)
+        worker.run(limit=10)
+        self.assertEqual(worker.source_logos, {"S1": "https://i.scdn.co/show640"})
+
 if __name__ == "__main__":
     unittest.main()

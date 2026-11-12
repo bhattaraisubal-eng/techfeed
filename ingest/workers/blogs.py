@@ -46,12 +46,15 @@ class BlogsWorker(Worker):
                     self.not_modified.add(feed_url)
                     self.new_validators[feed_url] = response.validators
                     continue
-                entries = parse_feed(response.body, feed_url)
+                root = parse_xml(response.body)
+                entries = feed_entries(root, feed_url)
             except (RequestError, FeedParseError) as error:
                 self.fetch_errors.append(f"feed {feed_url}: {error}")
                 continue
             # Only after the body parsed: a broken feed must not update the validators.
             self.new_validators[feed_url] = response.validators
+            if logo := feed_logo(root, feed_url):
+                self.source_logos[feed_url] = logo
             yield from entries[:limit]
 
     def normalize(self, raw: dict) -> ContentItem:
@@ -87,16 +90,23 @@ def blog_item_id(raw: dict) -> str:
 
 
 def parse_feed(body: bytes, feed_url: str) -> list[dict]:
-    """Parse RSS or Atom XML into plain dicts (our raw format for feeds).
+    """Parse RSS or Atom XML into plain dicts (our raw format for feeds)."""
+    return feed_entries(parse_xml(body), feed_url)
+
+
+def parse_xml(body: bytes) -> ET.Element:
+    try:
+        return ET.fromstring(body)
+    except ET.ParseError as error:
+        raise FeedParseError(f"not valid XML: {error}") from None
+
+
+def feed_entries(root: ET.Element, feed_url: str) -> list[dict]:
+    """The feed's entries as plain dicts.
 
     Each dict also keeps the entry's original XML under "xml", so the raw
     record is genuinely raw, not just the fields we chose to read.
     """
-    try:
-        root = ET.fromstring(body)
-    except ET.ParseError as error:
-        raise FeedParseError(f"not valid XML: {error}") from None
-
     if root.tag == f"{ATOM}feed":
         return [_atom_entry(entry, root, feed_url) for entry in root.findall(f"{ATOM}entry")]
     if root.tag == "rss":
@@ -105,6 +115,24 @@ def parse_feed(body: bytes, feed_url: str) -> list[dict]:
             raise FeedParseError("RSS feed has no <channel>")
         return [_rss_item(item, channel, feed_url) for item in channel.findall("item")]
     raise FeedParseError(f"unsupported feed type <{root.tag}>")
+
+
+def feed_logo(root: ET.Element, feed_url: str) -> str | None:
+    """The feed's own logo: one per feed, not per post.
+
+      RSS:  <channel><image><url>
+      Atom: <logo> (a wide image) first, else <icon> (a small square one)
+
+    Relative URLs are resolved against the feed's URL.
+    """
+    if root.tag == f"{ATOM}feed":
+        candidates = [xml_text(root, f"{ATOM}logo"), xml_text(root, f"{ATOM}icon")]
+    else:
+        candidates = [xml_text(root, "channel/image/url")]
+    for candidate in candidates:
+        if url := absolute_http_url(candidate, feed_url):
+            return url
+    return None
 
 
 def _rss_item(item: ET.Element, channel: ET.Element, feed_url: str) -> dict:

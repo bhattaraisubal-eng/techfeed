@@ -115,6 +115,15 @@ def record_validators(conn, source_id: int, etag: str | None, last_modified: str
     )
 
 
+def record_logo(conn, source_id: int, logo_url: str) -> None:
+    """Save the logo a source reported during its run (pipeline-owned column).
+
+    Called only when the worker found one, so a run without a logo (a 304,
+    a feed that dropped its <image>) leaves the saved logo alone.
+    """
+    conn.execute("UPDATE sources SET logo_url = %s WHERE id = %s", (logo_url, source_id))
+
+
 def upsert_items(conn, source_id: int, items: list[ContentItem]) -> StoreResult:
     """Upsert every item from one source, in one transaction: all or nothing.
 

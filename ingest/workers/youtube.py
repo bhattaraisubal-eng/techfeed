@@ -51,7 +51,7 @@ class YouTubeWorker(Worker):
         """`limit` = max videos per channel."""
         for channel_id in self.channel_ids:
             try:
-                playlist_id = self._uploads_playlist_id(channel_id)
+                playlist_id = self._read_channel(channel_id)
                 video_ids = self._recent_video_ids(playlist_id, limit)
                 videos = self._video_details(video_ids)
             except (RequestError, ChannelNotFoundError, KeyError) as error:
@@ -63,12 +63,17 @@ class YouTubeWorker(Worker):
     def _get(self, endpoint: str, **params):
         return self.http.get_json(f"{API_URL}/{endpoint}", params={**params, "key": self.api_key})
 
-    def _uploads_playlist_id(self, channel_id: str) -> str:
-        data = self._get("channels", part="contentDetails", id=channel_id)
+    def _read_channel(self, channel_id: str) -> str:
+        """The channel's "uploads" playlist ID. Also records its avatar as the logo:
+        part=snippet is in the same call, and quota is per call, not per part."""
+        data = self._get("channels", part="contentDetails,snippet", id=channel_id)
         items = data.get("items") or []
         if not items:
             raise ChannelNotFoundError(f"no channel with id {channel_id!r}")
-        return items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
+        channel = items[0]
+        if avatar := channel_avatar(channel.get("snippet") or {}):
+            self.source_logos[channel_id] = avatar
+        return channel["contentDetails"]["relatedPlaylists"]["uploads"]
 
     def _recent_video_ids(self, playlist_id: str, limit: int) -> list[str]:
         """Follow nextPageToken until we have `limit` IDs or the playlist ends."""
@@ -129,6 +134,19 @@ def youtube_thumbnail(snippet: dict) -> str | None:
     for size in THUMBNAIL_SIZES:
         url = (thumbnails.get(size) or {}).get("url")
         if url:
+            return url
+    return None
+
+
+# Channel avatars are square: 88, 240 or 800 px. A logo is small on a card,
+# but 800 stays sharp on high-density screens.
+AVATAR_SIZES = ("high", "medium", "default")
+
+
+def channel_avatar(snippet: dict) -> str | None:
+    thumbnails = snippet.get("thumbnails") or {}
+    for size in AVATAR_SIZES:
+        if url := (thumbnails.get(size) or {}).get("url"):
             return url
     return None
 

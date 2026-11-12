@@ -49,6 +49,13 @@ class CsvRowToSourceTests(unittest.TestCase):
             csv_row_to_source({**ROW, "official": "yes"})
 
 
+    def test_logo_override(self):
+        self.assertIsNone(csv_row_to_source(ROW)["logo_override"])     # the column is optional
+        url = "https://netflixtechblog.com/logo.png"
+        self.assertEqual(csv_row_to_source({**ROW, "logo_override": url})["logo_override"], url)
+        with self.assertRaisesRegex(ValueError, "logo_override"):
+            csv_row_to_source({**ROW, "logo_override": "logo.png"})    # must be a full http(s) URL
+
 class ReadSourcesTests(unittest.TestCase):
     def test_error_names_the_line(self):
         with tempfile.TemporaryDirectory() as tmp:

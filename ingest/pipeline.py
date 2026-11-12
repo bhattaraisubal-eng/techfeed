@@ -10,6 +10,7 @@ The real run does this, one source at a time:
   3. run it: fetch -> normalize -> validate
   4. upsert its items into content_items, with that source's id
   5. record the source's health: success, or failure and why
+     (and its logo, if the worker found one)
 
 One source at a time is what lets each item carry the right source_id, and
 each source get its own health record. A failing source never stops the others.
@@ -22,7 +23,7 @@ import psycopg
 
 from .config import ConfigError, require
 from .http import RequestError, Validators
-from .store import StoreResult, record_health, record_validators, upsert_items
+from .store import StoreResult, record_health, record_logo, record_validators, upsert_items
 from .workers.arxiv import ArxivWorker
 from .workers.base import RunResult, Worker
 from .workers.blogs import BlogsWorker
@@ -151,8 +152,11 @@ def run_source(conn, http, source: Source, limit: int, refetch: bool = False, st
     new_items = outcome.stored.inserted if outcome.stored else 0
     # Only workers that do conditional GET (blogs) have validators.
     validators = getattr(worker, "new_validators", {}).get(source.locator)
+    logo = worker.source_logos.get(source.locator) if worker else None
     with conn.transaction():
         record_health(conn, source.id, outcome.error, new_items)
+        if logo:
+            record_logo(conn, source.id, logo)
         # Saved only when everything succeeded: if the store had failed, keeping
         # the old validators makes the next run download and store this feed again.
         if outcome.error is None and validators is not None:

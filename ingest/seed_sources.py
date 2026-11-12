@@ -16,28 +16,32 @@ import sys
 from pathlib import Path
 
 from .config import PROJECT_ROOT, load_env_file
+from .parsing import absolute_http_url
 from .db import connect
 
 SOURCES_FILE = PROJECT_ROOT / "data" / "sources.csv"
 
 # Only these columns come from the CSV. The upsert updates exactly these.
-CURATED_COLUMNS = ("worker", "locator", "name", "homepage_url", "tier", "official", "status", "notes")
+CURATED_COLUMNS = ("worker", "locator", "name", "homepage_url", "tier", "official", "status", "notes", "logo_override")
 
 UPSERT_SQL = """
-INSERT INTO sources (worker, locator, name, homepage_url, tier, official, status, notes)
-VALUES (%(worker)s, %(locator)s, %(name)s, %(homepage_url)s, %(tier)s, %(official)s, %(status)s, %(notes)s)
+INSERT INTO sources (worker, locator, name, homepage_url, tier, official, status, notes, logo_override)
+VALUES (%(worker)s, %(locator)s, %(name)s, %(homepage_url)s, %(tier)s, %(official)s, %(status)s, %(notes)s, %(logo_override)s)
 ON CONFLICT (worker, locator) DO UPDATE
    SET name = EXCLUDED.name,
        homepage_url = EXCLUDED.homepage_url,
        tier = EXCLUDED.tier,
        official = EXCLUDED.official,
        status = EXCLUDED.status,
-       notes = EXCLUDED.notes
+       notes = EXCLUDED.notes,
+       logo_override = EXCLUDED.logo_override
    -- Skip the write when nothing changed, so a rerun reports "unchanged"
    -- instead of rewriting every row. IS DISTINCT FROM treats NULL = NULL as equal.
- WHERE (sources.name, sources.homepage_url, sources.tier, sources.official, sources.status, sources.notes)
+ WHERE (sources.name, sources.homepage_url, sources.tier, sources.official, sources.status, sources.notes,
+        sources.logo_override)
        IS DISTINCT FROM
-       (EXCLUDED.name, EXCLUDED.homepage_url, EXCLUDED.tier, EXCLUDED.official, EXCLUDED.status, EXCLUDED.notes)
+       (EXCLUDED.name, EXCLUDED.homepage_url, EXCLUDED.tier, EXCLUDED.official, EXCLUDED.status, EXCLUDED.notes,
+        EXCLUDED.logo_override)
 -- xmax = 0 only on a freshly inserted row (a PostgreSQL internal detail):
 -- it's how one statement tells us "inserted" from "updated".
 RETURNING (xmax = 0) AS inserted
@@ -66,6 +70,10 @@ def csv_row_to_source(row: dict) -> dict:
     values["official"] = official == "true"
 
     values["status"] = values["status"] or "active"
+
+    # The app loads this straight into an <img>, so only a full http(s) URL will do.
+    if values["logo_override"] is not None and absolute_http_url(values["logo_override"]) is None:
+        raise ValueError(f"logo_override must be a full http(s) URL, got {values['logo_override']!r}")
     return values
 
 

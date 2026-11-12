@@ -51,6 +51,9 @@ class Worker(ABC):
         self.http = http
         self.fetch_errors: list[str] = []
         self.skipped = 0
+        # {locator: logo URL}, for sources that told us their logo during fetch.
+        # Read by the pipeline after the run and saved as sources.logo_url.
+        self.source_logos: dict[str, str] = {}
 
     @abstractmethod
     def fetch(self, limit: int) -> Iterator[dict]:
@@ -63,6 +66,7 @@ class Worker(ABC):
     def run(self, limit: int = 10) -> RunResult:
         self.fetch_errors = []
         self.skipped = 0
+        self.source_logos = {}
         result = RunResult(source=self.source)
         seen: set[str] = set()
 

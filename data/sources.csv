@@ -1,80 +1,80 @@
-worker,locator,name,homepage_url,tier,official,status,notes
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_engineering.xml,Anthropic Engineering,https://www.anthropic.com/engineering,1,false,active,unofficial feed: Anthropic publishes none
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_research.xml,Anthropic Research,https://www.anthropic.com/research,1,false,active,unofficial feed: Anthropic publishes none
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_news.xml,Anthropic News,https://www.anthropic.com/news,1,false,active,unofficial feed: Anthropic publishes none
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_red.xml,Anthropic Red Team,https://red.anthropic.com/,1,false,active,unofficial feed: Anthropic publishes none
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_claude.xml,Claude Blog,https://claude.com/blog,1,false,active,unofficial feed: product-heavy
-blog,https://openai.com/news/rss.xml,OpenAI News,https://openai.com/news/,1,true,active,mixed: includes business and customer stories
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_openai_developer.xml,OpenAI Developer Blog,https://developers.openai.com/blog,1,false,active,unofficial feed
-blog,https://research.google/blog/rss/,Google Research,https://research.google/blog/,2,true,active,
-blog,https://deepmind.google/blog/rss.xml,Google DeepMind,https://deepmind.google/discover/blog/,2,true,active,
-blog,https://engineering.fb.com/feed/,Engineering at Meta,https://engineering.fb.com/,2,true,active,
-blog,https://www.allthingsdistributed.com/atom.xml,All Things Distributed (Werner Vogels),https://www.allthingsdistributed.com/,2,true,active,
-blog,https://aws.amazon.com/blogs/architecture/feed/,AWS Architecture Blog,https://aws.amazon.com/blogs/architecture/,2,true,active,
-blog,https://aws.amazon.com/blogs/machine-learning/feed/,AWS Machine Learning Blog,https://aws.amazon.com/blogs/machine-learning/,2,true,active,
-blog,https://www.amazon.science/index.rss,Amazon Science,https://www.amazon.science/,2,true,active,
-blog,https://machinelearning.apple.com/rss.xml,Apple Machine Learning Research,https://machinelearning.apple.com/,2,true,active,
-blog,https://netflixtechblog.com/feed,Netflix Tech Blog,https://netflixtechblog.com/,2,true,active,
-blog,https://www.microsoft.com/en-us/research/feed/,Microsoft Research,https://www.microsoft.com/en-us/research/blog/,2,true,active,
-blog,https://developer.nvidia.com/blog/feed/,NVIDIA Technical Blog,https://developer.nvidia.com/blog/,2,true,active,
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_google_ai.xml,Google Developers Blog,https://developers.googleblog.com/,2,false,active,unofficial feed (named google_ai in the repo)
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_mistral.xml,Mistral AI News,https://mistral.ai/news,2,false,active,unofficial feed
-blog,https://medium.com/feed/airbnb-engineering,Airbnb Engineering,https://medium.com/airbnb-engineering,3,true,active,
-blog,https://stripe.com/blog/feed.rss,Stripe Blog,https://stripe.com/blog,3,true,active,
-blog,https://engineering.atspotify.com/feed/,Spotify Engineering,https://engineering.atspotify.com/,3,true,active,
-blog,https://dropbox.tech/feed,Dropbox Tech,https://dropbox.tech/,3,true,active,
-blog,https://medium.com/feed/pinterest-engineering,Pinterest Engineering,https://medium.com/pinterest-engineering,3,true,active,
-blog,https://shopify.engineering/blog.atom,Shopify Engineering,https://shopify.engineering/,3,true,active,
-blog,https://eng.lyft.com/feed,Lyft Engineering,https://eng.lyft.com/,3,true,active,
-blog,https://engineering.salesforce.com/feed/,Salesforce Engineering,https://engineering.salesforce.com/,3,true,active,
-blog,https://www.databricks.com/feed,Databricks Blog,https://www.databricks.com/blog,3,true,active,
-blog,https://blog.cloudflare.com/rss/,Cloudflare Blog,https://blog.cloudflare.com/,3,true,active,
-blog,https://github.blog/engineering/feed/,GitHub Engineering,https://github.blog/engineering/,3,true,active,
-blog,https://huggingface.co/blog/feed.xml,Hugging Face Blog,https://huggingface.co/blog,3,true,active,
-blog,https://slack.engineering/feed/,Slack Engineering,https://slack.engineering/,3,true,active,
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_cohere.xml,Cohere Blog,https://cohere.com/blog,3,false,active,unofficial feed
-hn_search,uber.com/blog,Uber Engineering,https://www.uber.com/blog/engineering/,3,true,active,no feed: HN domain search (uber.com/blog) ~31 stories/year
-hn_search,linkedin.com/blog/engineering,LinkedIn Engineering,https://www.linkedin.com/blog/engineering,3,true,disabled,dropped: robots.txt disallows crawling and rarely on HN
-hn_search,careersatdoordash.com/engineering-blog,DoorDash Engineering,https://careersatdoordash.com/engineering-blog/,3,true,disabled,dropped: blocks bots and not on HN since 2024
-blog,https://simonwillison.net/atom/everything/,Simon Willison,https://simonwillison.net/,4,true,active,
-blog,https://www.latent.space/feed,Latent Space,https://www.latent.space/,4,true,active,
-blog,https://www.interconnects.ai/feed,Interconnects (Nathan Lambert),https://www.interconnects.ai/,4,true,active,
-blog,https://magazine.sebastianraschka.com/feed,Ahead of AI (Sebastian Raschka),https://magazine.sebastianraschka.com/,4,true,active,
-blog,https://hamel.dev/index.xml,Hamel Husain,https://hamel.dev/,4,true,active,
-blog,https://weaviate.io/blog/rss.xml,Weaviate Blog,https://weaviate.io/blog,4,true,active,
-blog,https://lilianweng.github.io/index.xml,Lil'Log (Lilian Weng),https://lilianweng.github.io/,4,true,active,
-blog,https://eugeneyan.com/rss/,Eugene Yan,https://eugeneyan.com/,4,true,active,
-blog,https://brooker.co.za/blog/rss.xml,Marc Brooker,https://brooker.co.za/blog/,4,true,active,
-blog,https://muratbuffalo.blogspot.com/feeds/posts/default,Metadata (Murat Demirbas),https://muratbuffalo.blogspot.com/,4,true,active,
-blog,https://aphyr.com/posts.atom,Aphyr,https://aphyr.com/,4,true,active,
-blog,https://martinfowler.com/feed.atom,Martin Fowler,https://martinfowler.com/,4,true,active,
-blog,https://blog.bytebytego.com/feed,ByteByteGo,https://blog.bytebytego.com/,4,true,active,
-blog,https://newsletter.pragmaticengineer.com/feed,The Pragmatic Engineer,https://newsletter.pragmaticengineer.com/,4,true,active,
-blog,https://danluu.com/atom.xml,Dan Luu,https://danluu.com/,4,true,active,
-blog,https://www.ycombinator.com/blog/rss/,Y Combinator Blog,https://www.ycombinator.com/blog,4,true,active,
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_paulgraham.xml,Paul Graham,https://paulgraham.com/articles.html,4,false,active,unofficial feed: dates are month only
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_cursor.xml,Cursor Blog,https://cursor.com/blog,4,false,active,unofficial feed: no descriptions
-blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_pinecone.xml,Pinecone Blog,https://www.pinecone.io/blog,4,false,active,unofficial feed
-youtube,UC3kf-QFT6FZzDk9JsPg8Svg,Hello Interview,https://www.youtube.com/channel/UC3kf-QFT6FZzDk9JsPg8Svg,,true,active,interview prep: system design
-youtube,UC_mYaQAE6-71rjSN6CeCA-g,NeetCode,https://www.youtube.com/@NeetCode,,true,active,interview prep: coding
-youtube,UCbvDQKzAJ5GwCjTrv4FWkxg,Jordan has no life,https://www.youtube.com/@jordanhasnolife5163,,true,active,interview prep: system design
-youtube,UCZgt6AzoyjslHTC9dz0UoTw,ByteByteGo,https://www.youtube.com/@ByteByteGo,,true,active,system design
-youtube,UCLKPca3kwwd-B59HNr-_lvA,AI Engineer,https://www.youtube.com/@aiDotEngineer,,true,active,AI engineering conference talks
-youtube,UCcefcZRL2oaA_uBNeo5UOWg,Y Combinator,https://www.youtube.com/@ycombinator,,true,active,startups
-youtube,UCYO_jab_esuFRV4b17AJtAw,3Blue1Brown,https://www.youtube.com/@3blue1brown,,true,active,math and ML intuition (e.g. neural networks and transformers)
-youtube,UC8butISFwT-Wl7EV0hUK0BQ,freeCodeCamp.org,https://www.youtube.com/@freecodecamp,,true,active,full-length programming courses
-youtube,UCzCsyvyrq38R6TnztEzOmgg,ByteMonk,https://www.youtube.com/@ByteMonk,,true,active,system design and software architecture
-youtube,UCSWj8mqQCcrcBlXPi4ThRDQ,KodeKloud,https://www.youtube.com/@KodeKloud,,true,active,DevOps and cloud (Kubernetes and Docker): mostly Shorts so mainly feeds the Shorts section
-spotify,2p7zZVwVF6Yk0Zsb4QmT7t,Latent Space,https://open.spotify.com/show/2p7zZVwVF6Yk0Zsb4QmT7t,,true,active,AI engineering
-spotify,1LaCr5TFAgYPK5qHjP3XDp,Practical AI,https://open.spotify.com/show/1LaCr5TFAgYPK5qHjP3XDp,,true,active,AI and ML
-spotify,4JH4tybY1zX6e5hjCwU6gF,Dwarkesh Podcast,https://open.spotify.com/show/4JH4tybY1zX6e5hjCwU6gF,,true,active,AI research interviews
-spotify,6UCtBYL29hwhw4YbTdX83N,Software Engineering Daily,https://open.spotify.com/show/6UCtBYL29hwhw4YbTdX83N,,true,active,software engineering
-spotify,6UO3XQclSuNnGxB39QdAnL,SE Radio,https://open.spotify.com/show/6UO3XQclSuNnGxB39QdAnL,,true,active,software engineering
-spotify,5bBki72YeKSLUqyD94qsuJ,The Changelog,https://open.spotify.com/show/5bBki72YeKSLUqyD94qsuJ,,true,active,software engineering and open source
-spotify,0hCbmBt7bJVqtvg3aNUsgt,Lightcone Podcast,https://open.spotify.com/show/0hCbmBt7bJVqtvg3aNUsgt,,true,active,startups (Y Combinator)
-spotify,6E709HRH7XaiZrMfgtNCun,How I Built This,https://open.spotify.com/show/6E709HRH7XaiZrMfgtNCun,,true,active,startup successes and failures
-spotify,7Fj0XEuUQLUqoMZQdsLXqp,Acquired,https://open.spotify.com/show/7Fj0XEuUQLUqoMZQdsLXqp,,true,active,company histories
-spotify,4ex8hmrHCPvPohKJb3wsuC,Indie Hackers,https://open.spotify.com/show/4ex8hmrHCPvPohKJb3wsuC,,true,active,side projects
-spotify,2dR1MUZEHCOnz1LVfNac0j,Lenny's Podcast,https://open.spotify.com/show/2dR1MUZEHCOnz1LVfNac0j,,true,active,product and startups
-hackernews,topstories,Hacker News front page,https://news.ycombinator.com/,,true,active,Firebase API: current front page
-arxiv,cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:cs.DC,arXiv AI and distributed computing,https://arxiv.org/,,true,disabled,too broad (~12000 papers/month): replace with HN arxiv.org search
+worker,locator,name,homepage_url,tier,official,status,notes,logo_override
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_engineering.xml,Anthropic Engineering,https://www.anthropic.com/engineering,1,false,active,unofficial feed: Anthropic publishes none,
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_research.xml,Anthropic Research,https://www.anthropic.com/research,1,false,active,unofficial feed: Anthropic publishes none,
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_news.xml,Anthropic News,https://www.anthropic.com/news,1,false,active,unofficial feed: Anthropic publishes none,
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_red.xml,Anthropic Red Team,https://red.anthropic.com/,1,false,active,unofficial feed: Anthropic publishes none,
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_claude.xml,Claude Blog,https://claude.com/blog,1,false,active,unofficial feed: product-heavy,
+blog,https://openai.com/news/rss.xml,OpenAI News,https://openai.com/news/,1,true,active,mixed: includes business and customer stories,
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_openai_developer.xml,OpenAI Developer Blog,https://developers.openai.com/blog,1,false,active,unofficial feed,
+blog,https://research.google/blog/rss/,Google Research,https://research.google/blog/,2,true,active,,
+blog,https://deepmind.google/blog/rss.xml,Google DeepMind,https://deepmind.google/discover/blog/,2,true,active,,
+blog,https://engineering.fb.com/feed/,Engineering at Meta,https://engineering.fb.com/,2,true,active,,
+blog,https://www.allthingsdistributed.com/atom.xml,All Things Distributed (Werner Vogels),https://www.allthingsdistributed.com/,2,true,active,,
+blog,https://aws.amazon.com/blogs/architecture/feed/,AWS Architecture Blog,https://aws.amazon.com/blogs/architecture/,2,true,active,,
+blog,https://aws.amazon.com/blogs/machine-learning/feed/,AWS Machine Learning Blog,https://aws.amazon.com/blogs/machine-learning/,2,true,active,,
+blog,https://www.amazon.science/index.rss,Amazon Science,https://www.amazon.science/,2,true,active,,
+blog,https://machinelearning.apple.com/rss.xml,Apple Machine Learning Research,https://machinelearning.apple.com/,2,true,active,,
+blog,https://netflixtechblog.com/feed,Netflix Tech Blog,https://netflixtechblog.com/,2,true,active,,
+blog,https://www.microsoft.com/en-us/research/feed/,Microsoft Research,https://www.microsoft.com/en-us/research/blog/,2,true,active,,
+blog,https://developer.nvidia.com/blog/feed/,NVIDIA Technical Blog,https://developer.nvidia.com/blog/,2,true,active,,
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_google_ai.xml,Google Developers Blog,https://developers.googleblog.com/,2,false,active,unofficial feed (named google_ai in the repo),
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_mistral.xml,Mistral AI News,https://mistral.ai/news,2,false,active,unofficial feed,
+blog,https://medium.com/feed/airbnb-engineering,Airbnb Engineering,https://medium.com/airbnb-engineering,3,true,active,,
+blog,https://stripe.com/blog/feed.rss,Stripe Blog,https://stripe.com/blog,3,true,active,,
+blog,https://engineering.atspotify.com/feed/,Spotify Engineering,https://engineering.atspotify.com/,3,true,active,,
+blog,https://dropbox.tech/feed,Dropbox Tech,https://dropbox.tech/,3,true,active,,
+blog,https://medium.com/feed/pinterest-engineering,Pinterest Engineering,https://medium.com/pinterest-engineering,3,true,active,,
+blog,https://shopify.engineering/blog.atom,Shopify Engineering,https://shopify.engineering/,3,true,active,,
+blog,https://eng.lyft.com/feed,Lyft Engineering,https://eng.lyft.com/,3,true,active,,
+blog,https://engineering.salesforce.com/feed/,Salesforce Engineering,https://engineering.salesforce.com/,3,true,active,,
+blog,https://www.databricks.com/feed,Databricks Blog,https://www.databricks.com/blog,3,true,active,,
+blog,https://blog.cloudflare.com/rss/,Cloudflare Blog,https://blog.cloudflare.com/,3,true,active,,
+blog,https://github.blog/engineering/feed/,GitHub Engineering,https://github.blog/engineering/,3,true,active,,
+blog,https://huggingface.co/blog/feed.xml,Hugging Face Blog,https://huggingface.co/blog,3,true,active,,
+blog,https://slack.engineering/feed/,Slack Engineering,https://slack.engineering/,3,true,active,,
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_cohere.xml,Cohere Blog,https://cohere.com/blog,3,false,active,unofficial feed,
+hn_search,uber.com/blog,Uber Engineering,https://www.uber.com/blog/engineering/,3,true,active,no feed: HN domain search (uber.com/blog) ~31 stories/year,
+hn_search,linkedin.com/blog/engineering,LinkedIn Engineering,https://www.linkedin.com/blog/engineering,3,true,disabled,dropped: robots.txt disallows crawling and rarely on HN,
+hn_search,careersatdoordash.com/engineering-blog,DoorDash Engineering,https://careersatdoordash.com/engineering-blog/,3,true,disabled,dropped: blocks bots and not on HN since 2024,
+blog,https://simonwillison.net/atom/everything/,Simon Willison,https://simonwillison.net/,4,true,active,,
+blog,https://www.latent.space/feed,Latent Space,https://www.latent.space/,4,true,active,,
+blog,https://www.interconnects.ai/feed,Interconnects (Nathan Lambert),https://www.interconnects.ai/,4,true,active,,
+blog,https://magazine.sebastianraschka.com/feed,Ahead of AI (Sebastian Raschka),https://magazine.sebastianraschka.com/,4,true,active,,
+blog,https://hamel.dev/index.xml,Hamel Husain,https://hamel.dev/,4,true,active,,
+blog,https://weaviate.io/blog/rss.xml,Weaviate Blog,https://weaviate.io/blog,4,true,active,,
+blog,https://lilianweng.github.io/index.xml,Lil'Log (Lilian Weng),https://lilianweng.github.io/,4,true,active,,
+blog,https://eugeneyan.com/rss/,Eugene Yan,https://eugeneyan.com/,4,true,active,,
+blog,https://brooker.co.za/blog/rss.xml,Marc Brooker,https://brooker.co.za/blog/,4,true,active,,
+blog,https://muratbuffalo.blogspot.com/feeds/posts/default,Metadata (Murat Demirbas),https://muratbuffalo.blogspot.com/,4,true,active,,
+blog,https://aphyr.com/posts.atom,Aphyr,https://aphyr.com/,4,true,active,,
+blog,https://martinfowler.com/feed.atom,Martin Fowler,https://martinfowler.com/,4,true,active,,
+blog,https://blog.bytebytego.com/feed,ByteByteGo,https://blog.bytebytego.com/,4,true,active,,
+blog,https://newsletter.pragmaticengineer.com/feed,The Pragmatic Engineer,https://newsletter.pragmaticengineer.com/,4,true,active,,
+blog,https://danluu.com/atom.xml,Dan Luu,https://danluu.com/,4,true,active,,
+blog,https://www.ycombinator.com/blog/rss/,Y Combinator Blog,https://www.ycombinator.com/blog,4,true,active,,
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_paulgraham.xml,Paul Graham,https://paulgraham.com/articles.html,4,false,active,unofficial feed: dates are month only,
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_cursor.xml,Cursor Blog,https://cursor.com/blog,4,false,active,unofficial feed: no descriptions,
+blog,https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_pinecone.xml,Pinecone Blog,https://www.pinecone.io/blog,4,false,active,unofficial feed,
+youtube,UC3kf-QFT6FZzDk9JsPg8Svg,Hello Interview,https://www.youtube.com/channel/UC3kf-QFT6FZzDk9JsPg8Svg,,true,active,interview prep: system design,
+youtube,UC_mYaQAE6-71rjSN6CeCA-g,NeetCode,https://www.youtube.com/@NeetCode,,true,active,interview prep: coding,
+youtube,UCbvDQKzAJ5GwCjTrv4FWkxg,Jordan has no life,https://www.youtube.com/@jordanhasnolife5163,,true,active,interview prep: system design,
+youtube,UCZgt6AzoyjslHTC9dz0UoTw,ByteByteGo,https://www.youtube.com/@ByteByteGo,,true,active,system design,
+youtube,UCLKPca3kwwd-B59HNr-_lvA,AI Engineer,https://www.youtube.com/@aiDotEngineer,,true,active,AI engineering conference talks,
+youtube,UCcefcZRL2oaA_uBNeo5UOWg,Y Combinator,https://www.youtube.com/@ycombinator,,true,active,startups,
+youtube,UCYO_jab_esuFRV4b17AJtAw,3Blue1Brown,https://www.youtube.com/@3blue1brown,,true,active,math and ML intuition (e.g. neural networks and transformers),
+youtube,UC8butISFwT-Wl7EV0hUK0BQ,freeCodeCamp.org,https://www.youtube.com/@freecodecamp,,true,active,full-length programming courses,
+youtube,UCzCsyvyrq38R6TnztEzOmgg,ByteMonk,https://www.youtube.com/@ByteMonk,,true,active,system design and software architecture,
+youtube,UCSWj8mqQCcrcBlXPi4ThRDQ,KodeKloud,https://www.youtube.com/@KodeKloud,,true,active,DevOps and cloud (Kubernetes and Docker): mostly Shorts so mainly feeds the Shorts section,
+spotify,2p7zZVwVF6Yk0Zsb4QmT7t,Latent Space,https://open.spotify.com/show/2p7zZVwVF6Yk0Zsb4QmT7t,,true,active,AI engineering,
+spotify,1LaCr5TFAgYPK5qHjP3XDp,Practical AI,https://open.spotify.com/show/1LaCr5TFAgYPK5qHjP3XDp,,true,active,AI and ML,
+spotify,4JH4tybY1zX6e5hjCwU6gF,Dwarkesh Podcast,https://open.spotify.com/show/4JH4tybY1zX6e5hjCwU6gF,,true,active,AI research interviews,
+spotify,6UCtBYL29hwhw4YbTdX83N,Software Engineering Daily,https://open.spotify.com/show/6UCtBYL29hwhw4YbTdX83N,,true,active,software engineering,
+spotify,6UO3XQclSuNnGxB39QdAnL,SE Radio,https://open.spotify.com/show/6UO3XQclSuNnGxB39QdAnL,,true,active,software engineering,
+spotify,5bBki72YeKSLUqyD94qsuJ,The Changelog,https://open.spotify.com/show/5bBki72YeKSLUqyD94qsuJ,,true,active,software engineering and open source,
+spotify,0hCbmBt7bJVqtvg3aNUsgt,Lightcone Podcast,https://open.spotify.com/show/0hCbmBt7bJVqtvg3aNUsgt,,true,active,startups (Y Combinator),
+spotify,6E709HRH7XaiZrMfgtNCun,How I Built This,https://open.spotify.com/show/6E709HRH7XaiZrMfgtNCun,,true,active,startup successes and failures,
+spotify,7Fj0XEuUQLUqoMZQdsLXqp,Acquired,https://open.spotify.com/show/7Fj0XEuUQLUqoMZQdsLXqp,,true,active,company histories,
+spotify,4ex8hmrHCPvPohKJb3wsuC,Indie Hackers,https://open.spotify.com/show/4ex8hmrHCPvPohKJb3wsuC,,true,active,side projects,
+spotify,2dR1MUZEHCOnz1LVfNac0j,Lenny's Podcast,https://open.spotify.com/show/2dR1MUZEHCOnz1LVfNac0j,,true,active,product and startups,
+hackernews,topstories,Hacker News front page,https://news.ycombinator.com/,,true,active,Firebase API: current front page,https://news.ycombinator.com/y18.svg
+arxiv,cat:cs.AI OR cat:cs.LG OR cat:cs.CL OR cat:cs.DC,arXiv AI and distributed computing,https://arxiv.org/,,true,disabled,too broad (~12000 papers/month): replace with HN arxiv.org search,

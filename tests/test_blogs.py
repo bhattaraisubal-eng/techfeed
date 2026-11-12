@@ -167,5 +167,48 @@ class FeedImageTests(unittest.TestCase):
         self.assertEqual(item.thumbnail_url, "https://a.example.com/1.jpg")
 
 
+
+def logo_feed(rss_channel_markup: str = "", atom_markup: str | None = None) -> bytes:
+    """An RSS feed with extra <channel> markup, or (atom_markup given) an Atom feed."""
+    if atom_markup is not None:
+        return f"""<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom"><title>A</title>{atom_markup}</feed>""".encode()
+    return f"""<?xml version="1.0"?><rss version="2.0"><channel><title>R</title>{rss_channel_markup}</channel></rss>""".encode()
+
+
+class FeedLogoTests(unittest.TestCase):
+    """The feed's own logo (not a post's image), saved on the source by the pipeline."""
+
+    def logos(self, body: bytes) -> dict:
+        worker = BlogsWorker(FakeHttp([(RSS_URL, body)]), [RSS_URL])
+        worker.run(limit=10)
+        return worker.source_logos
+
+    def test_rss_channel_image(self):
+        body = logo_feed("<image><url>https://blog.example.com/logo.png</url><title>R</title></image>")
+        self.assertEqual(self.logos(body), {RSS_URL: "https://blog.example.com/logo.png"})
+
+    def test_relative_logo_is_resolved_against_the_feed_url(self):
+        self.assertEqual(self.logos(logo_feed("<image><url>/logo.png</url></image>")),
+                         {RSS_URL: "https://feeds.example.com/logo.png"})
+
+    def test_atom_logo_wins_over_icon(self):
+        # Atom: <logo> is a wide image (2:1), <icon> a small square one (a favicon).
+        body = logo_feed(atom_markup="<icon>https://a.example.com/favicon.ico</icon><logo>https://a.example.com/logo.png</logo>")
+        self.assertEqual(self.logos(body), {RSS_URL: "https://a.example.com/logo.png"})
+
+    def test_atom_icon_alone(self):
+        self.assertEqual(self.logos(logo_feed(atom_markup="<icon>https://a.example.com/icon.png</icon>")),
+                         {RSS_URL: "https://a.example.com/icon.png"})
+
+    def test_no_logo_is_left_out(self):
+        self.assertEqual(self.logos(logo_feed()), {})
+
+    def test_unchanged_feed_reports_no_logo(self):
+        # A 304 has no body, so nothing to read: the saved logo must stay as it is.
+        http = FakeHttp([(RSS_URL, ConditionalResponse(None, Validators('"v1"')))])
+        worker = BlogsWorker(http, [RSS_URL], {RSS_URL: Validators('"v1"')})
+        worker.run(limit=10)
+        self.assertEqual(worker.source_logos, {})
+
 if __name__ == "__main__":
     unittest.main()

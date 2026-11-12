@@ -137,5 +137,27 @@ class PipelineTests(DatabaseTestCase):
         self.assertEqual(self.count_items(), 1)
 
 
+    # --- logos -----------------------------------------------------------
+
+    def logo_in_db(self):
+        return self.conn.execute("SELECT logo_url FROM sources WHERE id = %s", (self.source_id,)).fetchone()[0]
+
+    def test_the_feed_logo_is_saved_on_the_source(self):
+        body = RSS.replace(b"<title>Example Eng Blog</title>",
+                           b"<title>Example Eng Blog</title><image><url>https://blog.example.com/logo.png</url></image>")
+        run_source(self.conn, FakeHttp([(RSS_URL, body)]), self.source, limit=100)
+        self.assertEqual(self.logo_in_db(), "https://blog.example.com/logo.png")
+
+    def test_a_run_without_a_logo_keeps_the_saved_one(self):
+        # e.g. a 304, or a feed that dropped its <image>: don't erase what we had.
+        self.conn.execute("UPDATE sources SET logo_url = 'https://blog.example.com/old.png' WHERE id = %s", (self.source_id,))
+        run_source(self.conn, FakeHttp([(RSS_URL, RSS)]), self.source, limit=100)
+        self.assertEqual(self.logo_in_db(), "https://blog.example.com/old.png")
+
+    def test_dry_run_saves_no_logo(self):
+        body = RSS.replace(b"<channel>", b"<channel><image><url>https://blog.example.com/logo.png</url></image>")
+        run_source(self.conn, FakeHttp([(RSS_URL, body)]), self.source, limit=100, store=False)
+        self.assertIsNone(self.logo_in_db())
+
 if __name__ == "__main__":
     unittest.main()
