@@ -102,8 +102,17 @@ class SpotifyWorker(Worker):
             author=show.get("name"),
             description=clean_description(raw.get("description")),
             duration_seconds=round(duration_ms / 1000) if duration_ms is not None else None,
+            thumbnail_url=largest_image(raw.get("images")),
             raw=raw,
         )
+
+
+def largest_image(images: list | None) -> str | None:
+    """Spotify sends each episode's artwork in several sizes (640, 300, 64 px)."""
+    sized = [img for img in images or [] if img and img.get("url")]
+    if not sized:
+        return None
+    return max(sized, key=lambda img: img.get("width") or 0)["url"]
 
 
 def parse_release_date(value: str) -> datetime:

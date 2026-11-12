@@ -124,5 +124,23 @@ class ShortsTests(unittest.TestCase):
         self.assertFalse(self.is_short(sized("PT30S", None, None)))
 
 
+class ThumbnailTests(unittest.TestCase):
+    def thumbnail(self, thumbnails):
+        raw = video("v1")
+        raw["snippet"]["thumbnails"] = thumbnails
+        return YouTubeWorker(FakeHttp([]), "KEY", []).normalize(raw).thumbnail_url
+
+    def test_prefers_the_640px_standard_size(self):
+        sizes = {s: {"url": f"https://i.ytimg.com/{s}.jpg"} for s in ("default", "medium", "high", "standard", "maxres")}
+        self.assertEqual(self.thumbnail(sizes), "https://i.ytimg.com/standard.jpg")
+
+    def test_falls_back_when_standard_is_missing(self):
+        self.assertEqual(self.thumbnail({"default": {"url": "https://i.ytimg.com/d.jpg"}, "high": {"url": "https://i.ytimg.com/h.jpg"}}),
+                         "https://i.ytimg.com/h.jpg")
+
+    def test_no_thumbnails(self):
+        self.assertIsNone(self.thumbnail({}))
+
+
 if __name__ == "__main__":
     unittest.main()

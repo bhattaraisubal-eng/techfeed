@@ -80,6 +80,9 @@ CREATE TABLE content_items (
     -- in ingest/workers/youtube.py). Still content_type 'video'; this marks the
     -- format, for the app's Shorts section. Always false for other platforms.
     is_short          boolean NOT NULL DEFAULT false,
+    -- The item's own image (YouTube thumbnail, Spotify artwork, a feed's image).
+    -- NULL when the source gave none: the app falls back to the source's logo.
+    thumbnail_url     text,
     tags              text[] NOT NULL DEFAULT '{}',   -- the source's own tags, e.g. {Developers,"Open Source"}
 
     -- The untouched source data: "keep the raw, derive the rest".

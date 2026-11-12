@@ -113,9 +113,24 @@ class YouTubeWorker(Worker):
             description=clean_description(snippet.get("description")),
             duration_seconds=duration,
             is_short=is_youtube_short(raw, duration),
+            thumbnail_url=youtube_thumbnail(snippet),
             tags=tuple(snippet.get("tags", [])),
             raw=raw,
         )
+
+
+# Card-sized first: 640px ("standard") is sharp enough and exists for almost
+# every video; "maxres" (1280px+) is heavier than a card needs.
+THUMBNAIL_SIZES = ("standard", "high", "medium", "default")
+
+
+def youtube_thumbnail(snippet: dict) -> str | None:
+    thumbnails = snippet.get("thumbnails") or {}
+    for size in THUMBNAIL_SIZES:
+        url = (thumbnails.get(size) or {}).get("url")
+        if url:
+            return url
+    return None
 
 
 def is_youtube_short(raw: dict, duration_seconds: int | None) -> bool:

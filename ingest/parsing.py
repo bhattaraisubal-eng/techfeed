@@ -10,6 +10,7 @@ import re
 import xml.etree.ElementTree as ET
 from datetime import UTC, datetime
 from html.parser import HTMLParser
+from urllib.parse import urljoin, urlsplit
 
 
 class FeedParseError(ValueError):
@@ -148,3 +149,51 @@ def xml_text(element: ET.Element, path: str) -> str | None:
         return None
     text = "".join(node.itertext()).strip()
     return text or None
+
+
+def absolute_http_url(value: str | None, base_url: str | None = None) -> str | None:
+    """A full http(s) URL, or None.
+
+    Feeds sometimes give relative paths ("/images/hero.png"), which only make
+    sense next to the page they came from, so they're joined with `base_url`.
+    Anything that isn't http(s) after that (data:, javascript:, empty) is dropped.
+    """
+    value = (value or "").strip()
+    if not value:
+        return None
+    url = urljoin(base_url or "", value)
+    parts = urlsplit(url)
+    return url if parts.scheme in ("http", "https") and parts.netloc else None
+
+
+class _FirstImage(HTMLParser):
+    """Finds the first <img> worth showing on a card."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.src: str | None = None
+
+    def handle_starttag(self, tag, attrs):
+        if self.src is not None or tag != "img":
+            return
+        attrs = dict(attrs)
+        src = (attrs.get("src") or "").strip()
+        if not src or src.startswith("data:"):
+            return
+        # Tracking pixels: invisible 1x1 images that count views (Medium adds one to every post).
+        if attrs.get("width") in ("0", "1") or attrs.get("height") in ("0", "1"):
+            return
+        # Emoji drawn as images: WordPress replaces a ✅ in a post with <img class="emoji">.
+        classes = (attrs.get("class") or "").split()
+        if "emoji" in classes or "wp-smiley" in classes or "/images/core/emoji/" in src:
+            return
+        self.src = src
+
+
+def first_image_in_html(html: str | None, base_url: str | None = None) -> str | None:
+    """The first real image in an HTML fragment, as an absolute URL, or None."""
+    if not html:
+        return None
+    parser = _FirstImage()
+    parser.feed(html)
+    return absolute_http_url(parser.src, base_url)

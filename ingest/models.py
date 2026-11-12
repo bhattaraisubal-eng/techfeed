@@ -34,6 +34,7 @@ class ContentItem:
     description: str | None = None    # plain text, no HTML
     duration_seconds: int | None = None
     is_short: bool = False            # a YouTube Short; always False for other platforms
+    thumbnail_url: str | None = None  # this item's own image, if the source gave one
     tags: tuple[str, ...] = ()
     # The untouched source data ("keep the raw, derive the rest"). Excluded
     # from repr and comparisons because it's large.
@@ -52,6 +53,7 @@ class ContentItem:
             "description": self.description,
             "duration_seconds": self.duration_seconds,
             "is_short": self.is_short,
+            "thumbnail_url": self.thumbnail_url,
             "tags": list(self.tags),
         }
         if include_raw:

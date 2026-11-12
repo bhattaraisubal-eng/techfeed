@@ -21,10 +21,11 @@ from .models import ContentItem
 UPSERT_SQL = """
 INSERT INTO content_items (
     platform, source_item_id, source_id, content_type, title, url,
-    published_at, author, description, duration_seconds, is_short, tags, raw
+    published_at, author, description, duration_seconds, is_short, thumbnail_url, tags, raw
 ) VALUES (
     %(platform)s, %(source_item_id)s, %(source_id)s, %(content_type)s, %(title)s, %(url)s,
-    %(published_at)s, %(author)s, %(description)s, %(duration_seconds)s, %(is_short)s, %(tags)s, %(raw)s
+    %(published_at)s, %(author)s, %(description)s, %(duration_seconds)s, %(is_short)s, %(thumbnail_url)s,
+    %(tags)s, %(raw)s
 )
 ON CONFLICT (platform, source_item_id) DO UPDATE
    SET content_type     = EXCLUDED.content_type,
@@ -35,6 +36,7 @@ ON CONFLICT (platform, source_item_id) DO UPDATE
        description      = EXCLUDED.description,
        duration_seconds = EXCLUDED.duration_seconds,
        is_short         = EXCLUDED.is_short,   -- updated, so better detection fixes stored rows too
+       thumbnail_url    = EXCLUDED.thumbnail_url,
        tags             = EXCLUDED.tags,
        raw              = EXCLUDED.raw,
        last_seen_at     = now()
@@ -72,6 +74,7 @@ def item_to_row(item: ContentItem, source_id: int) -> dict:
         "description": item.description,
         "duration_seconds": item.duration_seconds,
         "is_short": item.is_short,
+        "thumbnail_url": item.thumbnail_url,
         "tags": list(item.tags),   # tuple -> list: psycopg sends lists as PostgreSQL arrays
         "raw": Jsonb(item.raw),    # Jsonb(...) tells psycopg to send this dict as jsonb
     }

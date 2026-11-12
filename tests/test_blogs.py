@@ -111,5 +111,61 @@ class BlogsWorkerTests(unittest.TestCase):
         self.assertNotIn(RSS_URL, worker.new_validators)
 
 
+def rss_item(inner: str) -> bytes:
+    """A one-item RSS feed; `inner` is extra markup inside <item>."""
+    return f"""<?xml version="1.0"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel><title>Images Blog</title>
+    <item>
+      <title>Post</title><link>https://blog.example.com/posts/1/</link><guid>https://blog.example.com/posts/1/</guid>
+      <pubDate>Wed, 01 May 2024 14:00:00 +0000</pubDate>
+      {inner}
+    </item>
+  </channel>
+</rss>""".encode()
+
+
+class FeedImageTests(unittest.TestCase):
+    def image(self, inner: str):
+        return BlogsWorker(FakeHttp([(RSS_URL, rss_item(inner))]), [RSS_URL]).run(limit=10).items[0].thumbnail_url
+
+    def test_media_thumbnail(self):
+        self.assertEqual(self.image('<media:thumbnail url="https://cdn.example.com/t.jpg"/>'), "https://cdn.example.com/t.jpg")
+
+    def test_media_content_image(self):
+        self.assertEqual(self.image('<media:content url="https://cdn.example.com/c.jpg" medium="image"/>'),
+                         "https://cdn.example.com/c.jpg")
+
+    def test_media_content_video_is_ignored(self):
+        self.assertIsNone(self.image('<media:content url="https://cdn.example.com/v.mp4" medium="video"/>'))
+
+    def test_image_enclosure(self):
+        self.assertEqual(self.image('<enclosure url="https://cdn.example.com/e.png" type="image/png" length="1"/>'),
+                         "https://cdn.example.com/e.png")
+
+    def test_podcast_enclosure_is_not_an_image(self):
+        self.assertIsNone(self.image('<enclosure url="https://cdn.example.com/ep.mp3" type="audio/mpeg" length="1"/>'))
+
+    def test_falls_back_to_first_img_in_the_post_html(self):
+        html = '<![CDATA[<p>Intro</p><img src="/images/hero.png"><img src="/images/second.png">]]>'
+        self.assertEqual(self.image(f"<content:encoded>{html}</content:encoded>"), "https://blog.example.com/images/hero.png")
+
+    def test_thumbnail_wins_over_body_image(self):
+        inner = ('<media:thumbnail url="https://cdn.example.com/t.jpg"/>'
+                 '<content:encoded><![CDATA[<img src="https://cdn.example.com/body.jpg">]]></content:encoded>')
+        self.assertEqual(self.image(inner), "https://cdn.example.com/t.jpg")
+
+    def test_no_image(self):
+        self.assertIsNone(self.image("<description>Just text</description>"))
+
+    def test_atom_enclosure_link(self):
+        atom = b"""<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom"><title>A</title>
+          <entry><id>tag:a,2024:1</id><title>T</title><published>2024-05-01T12:00:00Z</published>
+            <link rel="alternate" href="https://a.example.com/1"/>
+            <link rel="enclosure" type="image/jpeg" href="https://a.example.com/1.jpg"/></entry></feed>"""
+        item = BlogsWorker(FakeHttp([(ATOM_URL, atom)]), [ATOM_URL]).run(limit=10).items[0]
+        self.assertEqual(item.thumbnail_url, "https://a.example.com/1.jpg")
+
+
 if __name__ == "__main__":
     unittest.main()

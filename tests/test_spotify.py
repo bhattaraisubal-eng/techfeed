@@ -87,6 +87,15 @@ class SpotifyWorkerTests(unittest.TestCase):
         with self.assertRaises(HttpError):
             self.make(http, show_ids=("S1", "S2")).run(limit=5)
 
+    def test_thumbnail_is_the_largest_artwork(self):
+        images = [{"url": "https://i.scdn.co/64", "width": 64}, {"url": "https://i.scdn.co/640", "width": 640},
+                  {"url": "https://i.scdn.co/300", "width": 300}]
+        item = self.make(FakeHttp([])).normalize({**episode("e1"), "images": images})
+        self.assertEqual(item.thumbnail_url, "https://i.scdn.co/640")
+
+    def test_no_artwork(self):
+        self.assertIsNone(self.make(FakeHttp([])).normalize(episode("e1")).thumbnail_url)
+
     def test_release_date_precisions(self):
         self.assertEqual(parse_release_date("2024-05-07"), datetime(2024, 5, 7, tzinfo=UTC))
         self.assertEqual(parse_release_date("2024-05"), datetime(2024, 5, 1, tzinfo=UTC))

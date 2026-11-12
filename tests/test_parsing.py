@@ -2,8 +2,10 @@ import unittest
 from datetime import UTC, datetime
 
 from ingest.parsing import (
+    absolute_http_url,
     clean_description,
     clean_title,
+    first_image_in_html,
     parse_feed_date,
     parse_iso8601_duration,
     parse_iso_datetime,
@@ -77,6 +79,39 @@ class TextTests(unittest.TestCase):
         self.assertEqual(clean_description("a\r\n\r\n\r\n\r\nb"), "a\n\nb")
         self.assertEqual(clean_description("x" * 20, max_length=10), "x" * 9 + "…")
         self.assertIsNone(clean_description("   \n  "))
+
+
+class ImageTests(unittest.TestCase):
+    POST = "https://blog.example.com/2026/11/post/"
+
+    def test_relative_urls_are_resolved_against_the_post(self):
+        self.assertEqual(absolute_http_url("/img/hero.png", self.POST), "https://blog.example.com/img/hero.png")
+        self.assertEqual(absolute_http_url("hero.png", self.POST), "https://blog.example.com/2026/11/post/hero.png")
+
+    def test_only_http_urls_are_kept(self):
+        for bad in ("", None, "data:image/png;base64,AAAA", "javascript:alert(1)", "ftp://x/y.png"):
+            with self.subTest(value=bad):
+                self.assertIsNone(absolute_http_url(bad, self.POST))
+
+    def test_first_image_skips_tracking_pixels(self):
+        # Medium appends an invisible 1x1 image to every post; the real image comes first or after.
+        html = '<img src="https://medium.com/_/stat?event=post" width="1" height="1"><p>Hi</p><img src="https://cdn.example.com/hero.jpg">'
+        self.assertEqual(first_image_in_html(html), "https://cdn.example.com/hero.jpg")
+
+    def test_first_image_skips_inline_data_images(self):
+        html = '<img src="data:image/gif;base64,R0lGOD"><img src="/hero.jpg">'
+        self.assertEqual(first_image_in_html(html, self.POST), "https://blog.example.com/hero.jpg")
+
+    def test_first_image_skips_emoji(self):
+        # WordPress turns an emoji in a post into an <img>: found as the "first image"
+        # of AWS Architecture and Slack Engineering posts.
+        html = ('<img draggable="false" class="emoji" alt="✅" src="https://s.w.org/images/core/emoji/14.0.0/72x72/2705.png">'
+                '<img class="wp-smiley" src="https://example.com/smile.png"><img src="https://cdn.example.com/diagram.png">')
+        self.assertEqual(first_image_in_html(html), "https://cdn.example.com/diagram.png")
+
+    def test_no_image(self):
+        self.assertIsNone(first_image_in_html("<p>Just text</p>"))
+        self.assertIsNone(first_image_in_html(None))
 
 
 if __name__ == "__main__":

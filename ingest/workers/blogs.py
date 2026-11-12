@@ -12,13 +12,15 @@ from collections.abc import Iterator
 
 from ..http import RequestError, Validators
 from ..models import ContentItem, ContentType
-from ..parsing import FeedParseError, clean_description, clean_title, parse_feed_date, strip_html, xml_text
+from ..parsing import (FeedParseError, absolute_http_url, clean_description, clean_title, first_image_in_html,
+                       parse_feed_date, strip_html, xml_text)
 from .base import Worker
 
 # XML namespaces: Atom elements are written {namespace}name by ElementTree.
 ATOM = "{http://www.w3.org/2005/Atom}"
 DC = "{http://purl.org/dc/elements/1.1/}"
 CONTENT = "{http://purl.org/rss/1.0/modules/content/}"
+MEDIA = "{http://search.yahoo.com/mrss/}"   # "Media RSS": media:thumbnail, media:content
 
 
 class BlogsWorker(Worker):
@@ -62,6 +64,7 @@ class BlogsWorker(Worker):
             published_at=parse_feed_date(raw.get("published")),
             author=raw.get("author") or raw.get("feed_title"),
             description=clean_description(strip_html(raw["summary"])) if raw.get("summary") else None,
+            thumbnail_url=raw.get("image"),
             tags=tuple(raw.get("categories", [])),
             raw=raw,
         )
@@ -116,6 +119,8 @@ def _rss_item(item: ET.Element, channel: ET.Element, feed_url: str) -> dict:
         "author": xml_text(item, f"{DC}creator") or xml_text(item, "author"),
         "summary": xml_text(item, "description") or xml_text(item, f"{CONTENT}encoded"),
         "categories": [c.text.strip() for c in item.findall("category") if c.text and c.text.strip()],
+        "image": feed_image(item, xml_text(item, "link"),
+                            xml_text(item, f"{CONTENT}encoded") or xml_text(item, "description")),
         "xml": ET.tostring(item, encoding="unicode"),
     }
 
@@ -132,8 +137,34 @@ def _atom_entry(entry: ET.Element, feed: ET.Element, feed_url: str) -> dict:
         "author": xml_text(entry, f"{ATOM}author/{ATOM}name") or xml_text(feed, f"{ATOM}author/{ATOM}name"),
         "summary": xml_text(entry, f"{ATOM}summary") or xml_text(entry, f"{ATOM}content"),
         "categories": [c.get("term") for c in entry.findall(f"{ATOM}category") if c.get("term")],
+        "image": feed_image(entry, _atom_link(entry),
+                            xml_text(entry, f"{ATOM}content") or xml_text(entry, f"{ATOM}summary")),
         "xml": ET.tostring(entry, encoding="unicode"),
     }
+
+
+def feed_image(element: ET.Element, page_url: str | None, html: str | None) -> str | None:
+    """The entry's image, checking the most deliberate markup first:
+
+      1. <media:thumbnail>               a thumbnail, by definition
+      2. <media:content medium="image">  an image attached to the entry
+      3. <enclosure type="image/...">    RSS's attachment (Atom: <link rel="enclosure">)
+      4. the first real <img> in the post's HTML (often the hero image)
+
+    Relative URLs are resolved against the post's own URL.
+    """
+    for thumb in element.iter(f"{MEDIA}thumbnail"):
+        if url := absolute_http_url(thumb.get("url"), page_url):
+            return url
+    for media in element.iter(f"{MEDIA}content"):
+        if media.get("medium") == "image" or (media.get("type") or "").startswith("image/"):
+            if url := absolute_http_url(media.get("url"), page_url):
+                return url
+    for enclosure in [*element.findall("enclosure"), *element.findall(f"{ATOM}link[@rel='enclosure']")]:
+        if (enclosure.get("type") or "").startswith("image/"):
+            if url := absolute_http_url(enclosure.get("url") or enclosure.get("href"), page_url):
+                return url
+    return first_image_in_html(html, page_url)
 
 
 def _atom_link(entry: ET.Element) -> str | None:

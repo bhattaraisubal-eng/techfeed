@@ -77,6 +77,13 @@ class StoreTests(DatabaseTestCase):
         upsert_items(self.conn, self.news, [replace(video, is_short=True)])
         self.assertIs(stored(), True)                            # the backfill path: an update changes it
 
+    def test_thumbnail_is_stored_and_updated(self):
+        upsert_items(self.conn, self.news, [ITEM])
+        stored = lambda: self.conn.execute("SELECT thumbnail_url FROM content_items").fetchone()[0]
+        self.assertIsNone(stored())
+        upsert_items(self.conn, self.news, [replace(ITEM, thumbnail_url="https://cdn.example.com/t.jpg")])
+        self.assertEqual(stored(), "https://cdn.example.com/t.jpg")
+
     def test_a_bad_item_stores_nothing_from_its_batch(self):
         # A negative duration passes this test's ContentItem but breaks the
         # CHECK constraint: the database is the last line of defence.
